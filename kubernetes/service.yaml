@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: covid-19-web
+  name: covid-19-web
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: covid-19-web
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: covid-19-web
+    spec:
+      containers:
+        - image: gcr.io/decent-carving-275819/github.com/satyamgovila8/covid_project
+          imagePullPolicy: IfNotPresent
+          name: covidapp-sha256-1
+---
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  labels:
+    app: covid-19-web
+  name: covid-19-web-hpa-bkye
+  namespace: default
+spec:
+  maxReplicas: 5
+  metrics:
+    - resource:
+        name: cpu
+        targetAverageUtilization: 80
+      type: Resource
+  minReplicas: 1
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: covid-19-web
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: covid-19-web
+  name: covid-19-web-service
+  namespace: default
+spec:
+  clusterIP: 10.8.4.223
+  externalTrafficPolicy: Cluster
+  ports:
+    - nodePort: 30532
+      port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    app: covid-19-web
+  sessionAffinity: None
+  type: LoadBalancer

@@ -1,0 +1,17 @@
+APScheduler==3.6.3
+dnspython==1.16.0
+Flask==1.1.2
+Flask-Cors==3.0.8
+Flask-Login==0.4.1
+numpy==1.17.2
+pandas==0.25.1
+pyOpenSSL==19.1.0
+python-dateutil==2.8.0
+python3-openid==3.1.0
+PyYAML==3.13
+requests==2.22.0
+scipy==1.4.1
+statsmodels==0.11.1
+text-unidecode==1.2
+urllib3==1.25.6
+virtualenv==16.7.5
